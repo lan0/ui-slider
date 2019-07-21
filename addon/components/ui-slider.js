@@ -91,7 +91,7 @@ export default Ember.Component.extend({
     const newSection = this.sectionCalculator();
 
     if(newSection && newSection !== _oldSection) {
-      this.sendAction('action','section-change',{
+      this.action('section-change',{
         context: this,
         section: newSection,
         oldSection: _oldSection
@@ -147,7 +147,7 @@ export default Ember.Component.extend({
         value = range ? value : value[0];
         this.setValue(value);
 
-        this.sendAction('action', 'value-sync', {
+        this.action('value-sync', {
           context: this,
           value: value,
           message: `A new value -- ${value} -- was received by container and pushed into slider UI`
@@ -158,14 +158,14 @@ export default Ember.Component.extend({
 
   handleMinimalValue() {
     const {min,value,keepInRange} = this.getProperties('min','value','keepInRange');
-    this.sendAction('error', MINALIMAL_VALUE, {
+    this.error(MINALIMAL_VALUE, {
       message: `The minimum value [${min}] was exceeded: ${value}`,
       context: this
     });
     if(keepInRange) {
       run.next(()=>{
         this.set('value',min);
-        this.sendAction('action', 'range-correction', {
+        this.action('range-correction', {
           context: this,
           message: `The value was less than the minimum so resetting value to minimum [${min}]`,
           value: min,
@@ -178,14 +178,14 @@ export default Ember.Component.extend({
   },
   handleMaximalValue() {
     const {max,value,keepInRange} = this.getProperties('max','value','keepInRange');
-    this.sendAction('error', MAXIMAL_VALUE, {
+    this.error( MAXIMAL_VALUE, {
       message: `The maximum value [${max}] was exceeded: ${value}`,
       context: this
     });
     if(keepInRange) {
       run.next(()=>{
         this.set('value',max);
-        this.sendAction('action', 'range-correction', {
+        this.action('range-correction', {
           context: this,
           message: `The value was less than the minimum so resetting value to minimum [${max}]`,
           value: max,
@@ -204,13 +204,13 @@ export default Ember.Component.extend({
     run.next(()=>{
       if(disabled) {
         this._slider.slider('disable');
-        this.sendAction('action', 'slide-disabled', {
+        this.action('slide-disabled', {
           context: this,
           value: this.get('value')
         });
       } else {
         this._slider.slider('enable');
-        this.sendAction('action', 'slide-enabled', {
+        this.action('slide-enabled', {
           context: this,
           value: this.get('value')
         });
@@ -227,7 +227,7 @@ export default Ember.Component.extend({
     });
     changedConfig.map(item => {
       this._slider.slider('setAttribute', snake(item), get(this,item));
-      this.sendAction('action', 'set-attribute', {context:this, property: item, value: get(this,item)});
+      this.action('set-attribute', {context:this, property: item, value: get(this,item)});
     });
     this._benchmarkConfig();
     this._slider.slider('refresh');
@@ -286,14 +286,14 @@ export default Ember.Component.extend({
       self.set('isSliding', true);
       evt.preventDefault();
       run.next(()=> {
-        self.sendAction('action','slideStart',{context: self, value: evt.value, evt: evt});
+        self.action('slideStart',{context: self, value: evt.value, evt: evt});
       });
     });
     self._slider.on('slideStop', function(evt) {
       self.set('isSliding', false);
       evt.preventDefault();
-      self.sendAction('action', 'slideStop', {context: self, value: evt.value, evt: evt});
-      self.sendAction('changed', evt.value, {context: self, evt: evt, oldValue: self.get('value')});
+      self.action('slideStop', {context: self, value: evt.value, evt: evt});
+      self.changed(evt.value, {context: self, evt: evt, oldValue: self.get('value')});
       self.set('value', evt.value);
     });
   },
@@ -319,6 +319,10 @@ export default Ember.Component.extend({
   setValue(value) {
     this._slider.slider('setValue', value);
   },
+
+  action() {},
+  error() {},
+  changed() {},
 
   // LIFECYCLE HOOKS
   init() {
