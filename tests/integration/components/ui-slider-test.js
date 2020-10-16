@@ -1,5 +1,6 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 
 moduleForComponent('ui-slider', 'Integration | Component | ui-slider', {
   integration: true
@@ -13,5 +14,5 @@ test('it renders', function(assert) {
 
   this.render(hbs`{{ui-slider}}`);
 
-  assert.equal(this.$('.slider-value').val(), '5');
+  assert.equal($('.slider-value').val(), '5');
 });

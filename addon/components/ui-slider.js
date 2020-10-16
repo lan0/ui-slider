@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import $ from 'jquery';
 const { keys, create } = Object; // jshint ignore:line
-const {computed, observer, $, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
+const {computed, observer, A, run, on, typeOf, debug, defineProperty, get, set, inject, isEmpty} = Ember;  // jshint ignore:line
 const snake = thingy => {
   return thingy ? Ember.String.underscore(thingy) : thingy;
 };
@@ -278,7 +279,7 @@ export default Ember.Component.extend({
     }
 
     options = assign(options, {value: value});
-    this._slider = this.$(`#slider-value-${elementId}`).slider(options);
+    this._slider = $(`#slider-value-${elementId}`).slider(options);
   },
   addEventListeners() {
     var self = this;
